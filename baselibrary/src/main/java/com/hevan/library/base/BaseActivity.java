@@ -1,6 +1,9 @@
 package com.hevan.library.base;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -10,13 +13,12 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.WindowCompat;
 
 import com.hevan.library.R;
-import com.google.android.material.appbar.AppBarLayout;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 /**
@@ -24,38 +26,39 @@ import com.google.android.material.appbar.AppBarLayout;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private Context mContext;
+    protected Context mContext;
+    protected FrameLayout fl_base_content;
     /**
      * 布局加载
      */
     protected LayoutInflater mInflater;
-    private FrameLayout mBaseContentFL;
-    private AppBarLayout mAppBarLayout;
-    private Toolbar mToolbar;
+    /**
+     * 注册的广播
+     */
+    protected BroadcastReceiver mReceiver;
+
+    protected Unbinder unbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         mInflater = getLayoutInflater();
-        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
-        setContentView(R.layout.base_layout);
 
-        mAppBarLayout = findViewById(R.id.base_app_bar);
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        View actionView = onCreateActionBar(savedInstanceState);
-        if (actionView != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            onCustomActionBar(actionView);
-            actionBar.setCustomView(actionView, getActionBarCustomLayoutParams());
-        }
+        initBroadcastReceiver();
+        setContentView(getBaseLayoutResId());
+        initContainerView();
 
-        mBaseContentFL = (FrameLayout) findViewById(R.id.base_content_fl);
-        View view = mInflater.inflate(getLayoutResource(), mBaseContentFL, false);
-        mBaseContentFL.addView(view);
-        onViewCreated(view, savedInstanceState);
+        onViewCreated(savedInstanceState);
+    }
+
+    /**
+     * 获取基础内容视图资源id
+     *
+     * @return
+     */
+    protected int getBaseLayoutResId() {
+        return R.layout.base_layout;
     }
 
     /**
@@ -66,34 +69,76 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayoutResource();
 
     /**
-     * 内容视图创建完成后回调
-     *
-     * @param view               内容视图
-     * @param savedInstanceState
+     * 初始化根目录控件
      */
-    protected abstract void onViewCreated(View view, Bundle savedInstanceState);
+    protected void initContainerView() {
+        fl_base_content = findViewById(R.id.fl_base_content);
+        if (fl_base_content == null) {
+            throw new RuntimeException("can not find FrameLayout id=fl_base_content");
+        }
+        View view = mInflater.inflate(getLayoutResource(), fl_base_content, false);
+        fl_base_content.addView(view);
+        unbinder = ButterKnife.bind(this);
+        initViews(view);
+    }
 
     /**
-     * 初始化ActionBar,此方法是在oncreate方法中执行 ,在onCreateView前调用
+     * 初始化控件
+     *
+     * @param root activity根目录
      */
-    protected View onCreateActionBar(Bundle savedInstanceState) {
+    protected void initViews(View root) {
+
+    }
+
+    /**
+     * 内容视图创建完成后回调
+     *
+     * @param savedInstanceState
+     */
+    protected void onViewCreated(Bundle savedInstanceState) {
+    }
+
+    /**
+     * 初始化广播监听
+     */
+    private void initBroadcastReceiver() {
+        String[] actions = registerActions();
+        if (actions != null && actions.length > 0) {
+            mReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (BaseActivity.this.isFinishing() || TextUtils.isEmpty(intent.getAction())) {
+                        return;
+                    }
+
+                    BaseActivity.this.onReceive(intent.getAction(), intent);
+                }
+            };
+            IntentFilter filter = new IntentFilter();
+            for (String action : actions) {
+                filter.addAction(action);
+            }
+            registerReceiver(mReceiver, filter);
+        }
+    }
+
+    /**
+     * 注册广播
+     *
+     * @return null不注册
+     */
+    protected String[] registerActions() {
         return null;
     }
 
     /**
-     * 自定义ActionBar View后对ActionView Bar内的元素进行操作
+     * registerActions不为空时,可监听此广播
      *
-     * @param actionView
+     * @param action 广播事件
+     * @param intent
      */
-    protected abstract void onCustomActionBar(View actionView);
-
-    /**
-     * actionBar自定义标题中的参数
-     */
-    protected ActionBar.LayoutParams getActionBarCustomLayoutParams() {
-        return new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT,
-                ActionBar.LayoutParams.MATCH_PARENT);
+    protected void onReceive(String action, Intent intent) {
     }
 
     /**
@@ -124,5 +169,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final void showToast(String text) {
         Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+            this.unregisterReceiver(mReceiver);
+        }
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
     }
 }

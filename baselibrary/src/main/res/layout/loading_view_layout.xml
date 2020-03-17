@@ -50,7 +50,7 @@
             android:id="@+id/datas_empty_iv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_no_info_tip" />
+            android:src="@mipmap/lib_icon_no_info_tip" />
 
         <TextView
             android:id="@+id/datas_empty_tv"

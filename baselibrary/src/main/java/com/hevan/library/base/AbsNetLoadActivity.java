@@ -34,20 +34,24 @@ public abstract class AbsNetLoadActivity extends BaseActivity implements ILoadVi
     }
 
     @Override
-    protected void onViewCreated(View view, Bundle savedInstanceState) {
+    protected void initViews(View root) {
+        super.initViews(root);
+        loading_view = (LoadingView) root.findViewById(R.id.loading_view);
 
-        loading_view = (LoadingView) view.findViewById(R.id.loading_view);
-
-        content_fl = (FrameLayout) view.findViewById(R.id.content_fl);
+        content_fl = (FrameLayout) root.findViewById(R.id.content_fl);
         View contentView = mInflater.inflate(getContentLayoutResource(), content_fl, false);
         content_fl.addView(contentView);
 
-        initViews(contentView, savedInstanceState);
+    }
+
+    @Override
+    protected void onViewCreated(Bundle savedInstanceState) {
+
+
     }
 
     protected abstract int getContentLayoutResource();
 
-    protected abstract void initViews(View contentView, Bundle savedInstanceState);
 
     @Override
     public void showLoadView() {

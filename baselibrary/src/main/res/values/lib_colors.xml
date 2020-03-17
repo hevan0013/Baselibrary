@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="translucent">#00000000</color>
+
+    <!-- 分割线颜色-->
+    <color name="color_divider">#dcdcdc</color>
+    <!-- 点击背景色 -->
+    <color name="color_press">#33000000</color>
+
+</resources>

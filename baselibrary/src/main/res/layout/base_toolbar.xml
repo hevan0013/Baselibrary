@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--AppbarLayout是一种支持响应滚动手势的appbar布局-->
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/base_toolbar_abl"
+    android:id="@+id/abl_base_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
