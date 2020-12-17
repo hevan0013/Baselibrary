@@ -11,17 +11,17 @@ public interface ILoadAction {
     /**
      * 显示加载数据的视图
      */
-    public void showLoadView();
+    void showLoadView();
 
     /**
      * 示请求错误的视图
      */
-    public void showErrorView();
+    void showErrorView();
 
     /**
      * 示请求空白的视图
      */
-    public void showEmptyView();
+    void showEmptyView();
 
     /**
      * 置显示空状态时的图片资源与描述
@@ -29,7 +29,7 @@ public interface ILoadAction {
      * @param imgRes
      * @param textRes
      */
-    public void setEmptyDataRes(int imgRes, int textRes);
+    void setEmptyDataRes(int imgRes, int textRes);
 
     /**
      * 设置显示空状态时的图片资源与描述
@@ -37,27 +37,26 @@ public interface ILoadAction {
      * @param imgRes
      * @param textRes
      */
-    public void setEmptyDataRes(int imgRes, String textRes);
+    void setEmptyDataRes(int imgRes, String textRes);
 
     /**
      * 展示界面网络超时状态
      */
-    public void showConnectTimeOut();
+    void showConnectTimeOut();
 
     /**
      * 隐藏加载数据的View
      */
-    public void hideView();
+    void hideView();
 
     /**
      * 注册请求重试监听事件
      *
      * @param requestRetry
      */
-    public void registerRequestRetry(RequestRetryListener requestRetry);
+    void registerRequestRetry(RequestRetryListener requestRetry);
 
-
-    public interface RequestRetryListener {
-        public void onRequestRetry(View view);
+    interface RequestRetryListener {
+        void onRequestRetry(View view);
     }
 }

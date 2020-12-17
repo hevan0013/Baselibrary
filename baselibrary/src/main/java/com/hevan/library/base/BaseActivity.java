@@ -111,7 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     if (BaseActivity.this.isFinishing() || TextUtils.isEmpty(intent.getAction())) {
                         return;
                     }
-
                     BaseActivity.this.onReceive(intent.getAction(), intent);
                 }
             };

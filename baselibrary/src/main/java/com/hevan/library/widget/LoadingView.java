@@ -66,7 +66,7 @@ public class LoadingView extends FrameLayout implements View.OnClickListener {
     }
 
     private void initViews() {
-        loading_view_rl = inflate(getContext(), R.layout.loading_view_layout, this);
+        loading_view_rl = inflate(getContext(), R.layout.lib_view_loading, this);
 
         loading_pb = (ProgressBar) findViewById(R.id.loading_pb);
 
@@ -199,8 +199,8 @@ public class LoadingView extends FrameLayout implements View.OnClickListener {
 
     public interface LoadingViewListener {
 
-        public void onRequestRetry(View view);
+        void onRequestRetry(View view);
 
-        public void onNetworkSetting(View view);
+        void onNetworkSetting(View view);
     }
 }

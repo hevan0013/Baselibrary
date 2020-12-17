@@ -3,11 +3,9 @@ package com.hevan.library.base;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.hevan.library.R;
 import com.hevan.library.utils.ApnUtil;
 import com.hevan.library.widget.LoadingView;
 
@@ -15,7 +13,7 @@ import com.hevan.library.widget.LoadingView;
 /**
  * Created by huangwx on 2016/6/16.
  */
-public abstract class AbsNetLoadActivity extends BaseActivity implements ILoadView, LoadingView.LoadingViewListener {
+public abstract class AbsNetLoadActivity extends AbsToolbarActivity implements ILoadView, LoadingView.LoadingViewListener {
 
     private FrameLayout content_fl;
     private LoadingView loading_view;
@@ -28,64 +26,54 @@ public abstract class AbsNetLoadActivity extends BaseActivity implements ILoadVi
      */
     private INetLoadAction.NetworkChangeListener mNetworkChangeListener;
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.base_net_load_layout;
-    }
-
-    @Override
-    protected void initViews(View root) {
-        super.initViews(root);
-        loading_view = (LoadingView) root.findViewById(R.id.loading_view);
-
-        content_fl = (FrameLayout) root.findViewById(R.id.content_fl);
-        View contentView = mInflater.inflate(getContentLayoutResource(), content_fl, false);
-        content_fl.addView(contentView);
-
-    }
-
-    @Override
-    protected void onViewCreated(Bundle savedInstanceState) {
-
-
-    }
-
-    protected abstract int getContentLayoutResource();
-
 
     @Override
     public void showLoadView() {
-        loading_view.showLoadingView();
+        if (loading_view != null) {
+            loading_view.showLoadingView();
+        }
     }
 
     @Override
     public void showErrorView() {
-        loading_view.showErrorView();
+        if (loading_view != null) {
+            loading_view.showErrorView();
+        }
     }
 
     @Override
     public void showEmptyView() {
-        loading_view.showEmptyView();
+        if (loading_view != null) {
+            loading_view.showEmptyView();
+        }
     }
 
     @Override
     public void setEmptyDataRes(int imgRes, int textRes) {
-        loading_view.setEmptyDataRes(imgRes, textRes);
+        if (loading_view != null) {
+            loading_view.setEmptyDataRes(imgRes, textRes);
+        }
     }
 
     @Override
     public void setEmptyDataRes(int imgRes, String textRes) {
-        loading_view.setEmptyDataRes(imgRes, textRes);
+        if (loading_view != null) {
+            loading_view.setEmptyDataRes(imgRes, textRes);
+        }
     }
 
     @Override
     public void showConnectTimeOut() {
-        loading_view.showConnectTimeOut();
+        if (loading_view != null) {
+            loading_view.showConnectTimeOut();
+        }
     }
 
     @Override
     public void hideView() {
-        loading_view.hiddenView();
+        if (loading_view != null) {
+            loading_view.hiddenView();
+        }
     }
 
     @Override
@@ -93,16 +81,21 @@ public abstract class AbsNetLoadActivity extends BaseActivity implements ILoadVi
         mRequestRetryListener = requestRetry;
     }
 
+    @Override
     public void registerNetworkChange(INetLoadAction.NetworkChangeListener networkChange) {
         mNetworkChangeListener = networkChange;
     }
 
     public void showNetSettingView() {
-        loading_view.showNoConnection();
+        if (loading_view != null) {
+            loading_view.showNoConnection();
+        }
     }
 
     public void hideNetSettingView() {
-        loading_view.hiddenView();
+        if (loading_view != null) {
+            loading_view.hiddenView();
+        }
     }
 
     public class NetworkBroadcastReceiver extends BroadcastReceiver {

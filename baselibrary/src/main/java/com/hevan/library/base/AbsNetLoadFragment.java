@@ -31,16 +31,16 @@ public abstract class AbsNetLoadFragment extends BaseFragment implements Loading
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.base_net_load_fragment_lay, container, false);
+        View view = inflater.inflate(R.layout.base_fragment_net_load, container, false);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loading_view = (LoadingView) view.findViewById(R.id.loading_view);
+        loading_view = view.findViewById(R.id.loading_view);
 
-        content_fl = (FrameLayout) view.findViewById(R.id.content_fl);
+        content_fl = view.findViewById(R.id.content_fl);
         View contentView = getActivity().getLayoutInflater().inflate(getContentLayoutResource(), content_fl, false);
         content_fl.addView(contentView);
 
